@@ -1,14 +1,33 @@
 const header = document.querySelector("header");
+
 const first_skill = document.querySelector(".skill:first-child");
 const sk_counters = document.querySelectorAll(".counter span");
 const progress_bars = document.querySelectorAll(".skills svg circle");
+
+const ml_section=document.querySelector(".milestones");
+const ml_counters =document.querySelectorAll(".number span");
+
+const prt_section =document.querySelector(".portfolio");
+const zoom_icons = document.querySelectorAll(".zoom-icon");
+const modal_overlay=document.querySelector(".modal-overlay");
 
 
 window.addEventListener("scroll",()=>{
     if(!skillsPlayed) skillCounter();
 
-    
+    if(!mlPlayed)  mlCounters();
 });
+
+function updateCount(num,maxNum){
+    let currentNum = +num.innerText;
+    
+    if(currentNum<maxNum){
+        num.innerText=currentNum+1;
+        setTimeout(()=>{
+            updateCount(num,maxNum);
+        },12);
+    }
+}
 
 /* -------------------- Sticky Navbar -------------------- */
 
@@ -40,16 +59,6 @@ function hasReached(el){
     
 }
 
-function updateCount(num,maxNum){
-    let currentNum = +num.innerText;
-    
-    if(currentNum<maxNum){
-        num.innerText=currentNum+1;
-        setTimeout(()=>{
-            updateCount(num,maxNum);
-        },12);
-    }
-}
 
 let skillsPlayed =false;
 
@@ -73,3 +82,43 @@ function skillCounter(){
 }
 
 
+/* -------------------- Services Counter Animation -------------------- */
+
+let mlPlayed=false;
+
+function mlCounters(){
+    if(!hasReached(ml_section)) return;
+    mlPlayed=true;
+
+    ml_counters.forEach(ctr=>{
+        let target =+ctr.dataset.target;
+        
+        setTimeout(()=>{
+            updateCount(ctr,target);
+        },400);
+
+    });
+
+}
+
+/* -------------------- PortFolio filter Animation -------------------- */
+let mixer = mixitup(".portfolio-gallery",{
+    selectors:{
+        target:".prt-card",
+    },
+    animation:{
+        duration:500,
+    }
+});
+
+/* -------------------- Modap Pop Up Animation -------------------- */
+zoom_icons.forEach(icn=>icn.addEventListener("click",()=>{
+    prt_section.classList.add("open");
+    document.body.classList.add("stopScrolling");
+}));
+
+modal_overlay.addEventListener("click",()=>{
+    prt_section.classList.remove("open");
+    document.body.classList.remove("stopScrolling");
+});
+    
