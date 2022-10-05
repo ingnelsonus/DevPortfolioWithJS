@@ -10,9 +10,14 @@ const ml_counters =document.querySelectorAll(".number span");
 const prt_section =document.querySelector(".portfolio");
 const zoom_icons = document.querySelectorAll(".zoom-icon");
 const modal_overlay=document.querySelector(".modal-overlay");
+const images =document.querySelectorAll(".images img");
+const prev_btn=document.querySelector(".prev-btn");
+const next_btn=document.querySelector(".next-btn");
 
+const links = document.querySelectorAll(".nav-link");
 
 window.addEventListener("scroll",()=>{
+    activeLink();
     if(!skillsPlayed) skillCounter();
 
     if(!mlPlayed)  mlCounters();
@@ -111,14 +116,77 @@ let mixer = mixitup(".portfolio-gallery",{
     }
 });
 
-/* -------------------- Modap Pop Up Animation -------------------- */
-zoom_icons.forEach(icn=>icn.addEventListener("click",()=>{
+/* -------------------- Modal Pop Up Animation -------------------- */
+let currentIndex=0;
+
+zoom_icons.forEach((icn,i)=>
+    icn.addEventListener("click",()=>{
     prt_section.classList.add("open");
     document.body.classList.add("stopScrolling");
+    currentIndex=i;
+    changheImage(currentIndex);
 }));
 
 modal_overlay.addEventListener("click",()=>{
     prt_section.classList.remove("open");
     document.body.classList.remove("stopScrolling");
 });
+
+prev_btn.addEventListener("click",()=>{
+    if(currentIndex===0){
+        currentIndex=5;
+    }else{
+        currentIndex--;
+    }    
+    changheImage(currentIndex);
+});
+
+next_btn.addEventListener("click",()=>{
+    if(currentIndex===5){
+        currentIndex=0;
+    }else{
+        currentIndex++;
+    }        
+    changheImage(currentIndex);
+});
+
+
+function changheImage(index){
+    images.forEach((img) =>img.classList.remove("showImage"));
+    images[index].classList.add("showImage");
+}
+
+/* -------------------- Swiper Animation -------------------- */
+
+const swiper = new Swiper('.swiper', {
+    loop: true,
+    speed: 500,
+    autoplay: true,
+    
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+
+
+/* -------------------- Change Active Link On Scroll -------------------- */
+
+  function activeLink(){
+    let sections = document.querySelectorAll("section[id]");
+    let passedSections=Array.from(sections).map((sct,i)=>{
+        return {
+            y: sct.getBoundingClientRect().top - header.offsetHeight,
+            id: i,
+        };
+    }).filter(sct=>sct.y <= 0);
+
+    let currSectionId = passedSections.at(-1).id;
+    
+    links.forEach((l)=>l.classList.remove("active"));
+    links[currSectionId].classList.add("active");
+
+  }
+
+  activeLink();
     
