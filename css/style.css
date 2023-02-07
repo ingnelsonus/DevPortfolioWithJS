@@ -585,6 +585,7 @@ padding: var(--section-padding) 0;
     grid-template-columns: repeat(4, 150px);
     margin-top: 2rem;
     justify-content: space-between;
+    margin-bottom: 2rem;
 }
 
 .skill{
